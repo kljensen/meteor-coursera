@@ -1,6 +1,9 @@
 Package.describe({
-  summary: "Github OAuth flow",
-  version: "1.1.3"
+  summary: "Coursera OAuth flow",
+  version: "0.1.0",
+  documentation: 'README.md',
+  git: 'https://github.com/kljensen/meteor-coursera.git'
+
 });
 
 Package.onUse(function(api) {

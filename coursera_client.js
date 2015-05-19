@@ -18,17 +18,17 @@ Coursera.requestCredential = function (options, credentialRequestCompleteCallbac
       new ServiceConfiguration.ConfigError());
     return;
   }
+  
   var credentialToken = Random.secret();
-
   var scope = (options && options.requestPermissions) || [];
   var flatScope = _.map(scope, encodeURIComponent).join('+');
-
   var loginStyle = OAuth._loginStyle('coursera', config, options);
 
+
   var loginUrl =
-    'https://github.com/login/oauth/authorize' +
-    '?client_id=' + config.clientId +
-    '&scope=' + flatScope +
+    'https://accounts.coursera.org/oauth2/v1/auth?' +
+    '&response_type=code&scope=view_profile' +
+    '&client_id=' + config.clientId +
     '&redirect_uri=' + OAuth._redirectUri('coursera', config) +
     '&state=' + OAuth._stateParam(loginStyle, credentialToken);
 

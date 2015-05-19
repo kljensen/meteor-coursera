@@ -1,6 +1,6 @@
-Github = {};
+Coursera = {};
 
-OAuth.registerService('github', 2, null, function(query) {
+OAuth.registerService('coursera', 2, null, function(query) {
 
   var accessToken = getAccessToken(query);
   var identity = getIdentity(accessToken);
@@ -23,7 +23,7 @@ OAuth.registerService('github', 2, null, function(query) {
 // }
 
 var getAccessToken = function (query) {
-  var config = ServiceConfiguration.configurations.findOne({service: 'github'});
+  var config = ServiceConfiguration.configurations.findOne({service: 'coursera'});
   if (!config){
     throw new ServiceConfiguration.ConfigError();
   }
@@ -40,16 +40,16 @@ var getAccessToken = function (query) {
           code: query.code,
           client_id: config.clientId,
           client_secret: OAuth.openSecret(config.secret),
-          redirect_uri: OAuth._redirectUri('github', config),
+          redirect_uri: OAuth._redirectUri('coursera', config),
           state: query.state
         }
       });
   } catch (err) {
-    throw _.extend(new Error("Failed to complete OAuth handshake with Github. " + err.message),
+    throw _.extend(new Error("Failed to complete OAuth handshake with Coursera. " + err.message),
                    {response: err.response});
   }
   if (response.data.error) { // if the http response was a json object with an error attribute
-    throw new Error("Failed to complete OAuth handshake with GitHub. " + response.data.error);
+    throw new Error("Failed to complete OAuth handshake with Coursera. " + response.data.error);
   } else {
     return response.data.access_token;
   }
@@ -69,6 +69,6 @@ var getIdentity = function (accessToken) {
 };
 
 
-Github.retrieveCredential = function(credentialToken, credentialSecret) {
+Coursera.retrieveCredential = function(credentialToken, credentialSecret) {
   return OAuth.retrieveCredential(credentialToken, credentialSecret);
 };

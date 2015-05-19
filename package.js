@@ -12,12 +12,12 @@ Package.onUse(function(api) {
   api.use('random', 'client');
   api.use('service-configuration', ['client', 'server']);
 
-  api.export('Github');
+  api.export('Coursera');
 
   api.addFiles(
-    ['github_configure.html', 'github_configure.js'],
+    ['coursera_configure.html', 'coursera_configure.js'],
     'client');
 
-  api.addFiles('github_server.js', 'server');
-  api.addFiles('github_client.js', 'client');
+  api.addFiles('coursera_server.js', 'server');
+  api.addFiles('coursera_client.js', 'client');
 });

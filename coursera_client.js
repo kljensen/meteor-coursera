@@ -1,18 +1,18 @@
-Github = {};
+Coursera = {};
 
-// Request Github credentials for the user
+// Request Coursera credentials for the user
 // @param options {optional}
 // @param credentialRequestCompleteCallback {Function} Callback function to call on
 //   completion. Takes one argument, credentialToken on success, or Error on
 //   error.
-Github.requestCredential = function (options, credentialRequestCompleteCallback) {
+Coursera.requestCredential = function (options, credentialRequestCompleteCallback) {
   // support both (options, callback) and (callback).
   if (!credentialRequestCompleteCallback && typeof options === 'function') {
     credentialRequestCompleteCallback = options;
     options = {};
   }
 
-  var config = ServiceConfiguration.configurations.findOne({service: 'github'});
+  var config = ServiceConfiguration.configurations.findOne({service: 'coursera'});
   if (!config) {
     credentialRequestCompleteCallback && credentialRequestCompleteCallback(
       new ServiceConfiguration.ConfigError());
@@ -23,17 +23,17 @@ Github.requestCredential = function (options, credentialRequestCompleteCallback)
   var scope = (options && options.requestPermissions) || [];
   var flatScope = _.map(scope, encodeURIComponent).join('+');
 
-  var loginStyle = OAuth._loginStyle('github', config, options);
+  var loginStyle = OAuth._loginStyle('coursera', config, options);
 
   var loginUrl =
     'https://github.com/login/oauth/authorize' +
     '?client_id=' + config.clientId +
     '&scope=' + flatScope +
-    '&redirect_uri=' + OAuth._redirectUri('github', config) +
+    '&redirect_uri=' + OAuth._redirectUri('coursera', config) +
     '&state=' + OAuth._stateParam(loginStyle, credentialToken);
 
   OAuth.launchLogin({
-    loginService: "github",
+    loginService: 'coursera',
     loginStyle: loginStyle,
     loginUrl: loginUrl,
     credentialRequestCompleteCallback: credentialRequestCompleteCallback,

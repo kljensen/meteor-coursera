@@ -3,16 +3,17 @@ Coursera = {};
 OAuth.registerService('coursera', 2, null, function(query) {
 
   var accessToken = getAccessToken(query);
-  var identity = getIdentity(accessToken);
+  var profile = getProfile(accessToken);
 
   return {
     serviceData: {
-      id: identity.id,
+      id: profile.id,
       accessToken: OAuth.sealSecret(accessToken),
-      email: identity.email,
-      username: identity.login
+      profile: profile
+      // email: profile.email,
+      // username: profile.login
     },
-    options: {profile: {name: identity.name}}
+    options: {profile: {name: profile.name}}
   };
 });
 
@@ -31,17 +32,17 @@ var getAccessToken = function (query) {
   var response;
   try {
     response = HTTP.post(
-      "https://github.com/login/oauth/access_token", {
+      "https://accounts.coursera.org/oauth2/v1/token", {
         headers: {
-          Accept: 'application/json',
-          "User-Agent": userAgent
+          Accept: 'application/json'
         },
         params: {
           code: query.code,
           client_id: config.clientId,
           client_secret: OAuth.openSecret(config.secret),
           redirect_uri: OAuth._redirectUri('coursera', config),
-          state: query.state
+          state: query.state,
+          grant_type: 'authorization_code'
         }
       });
   } catch (err) {
@@ -55,15 +56,16 @@ var getAccessToken = function (query) {
   }
 };
 
-var getIdentity = function (accessToken) {
+var getProfile = function (accessToken) {
   try {
-    return HTTP.get(
-      "https://api.github.com/user", {
-        // headers: {"User-Agent": userAgent}, // http://developer.github.com/v3/#user-agent-required
-        params: {access_token: accessToken}
-      }).data;
+    var profileResponse = HTTP.get(
+      "https://api.coursera.org/api/externalBasicProfiles.v1?q=me", {
+        headers: {"Authorization": 'Bearer ' + accessToken},
+        params: {fields: 'timezone,locale,privacy,name'}
+    });
+    return profileResponse.data.elements[0];
   } catch (err) {
-    throw _.extend(new Error("Failed to fetch identity from Github. " + err.message),
+    throw _.extend(new Error("Failed to fetch identity from Coursera. " + err.message),
                    {response: err.response});
   }
 };
